@@ -54,13 +54,13 @@ import org.apache.hadoop.io.IntWritable;
 				
 				Long unix_time = DateParser.timeToUnixTime(s_timestamp);
 				
-				Integer time_in_minutes = DateParser.timeToMinutes(s_timestamp);
+				//Integer time_in_minutes = DateParser.timeToMinutes(s_timestamp);
 				
-				Integer time_group = com.time_groups.Snippet.TimeMapInMinutesToHour(time_in_minutes);
-				String composite_imei_time_group = imei_ + "_" + time_group.toString();
+				//Integer time_group = com.time_groups.Snippet.TimeMapInMinutesToHour(time_in_minutes);
+				//String composite_imei_time_group = imei_ + "_" + time_group.toString();
 				
-				CompositeKey stockKey = new  CompositeKey(time_group ,imei_ , unix_time);
-				Text stockValue = new Text(imsi_ + "," + s_timestamp + "," + e_timestamp+ "," +lac+ "," +cel_id+ "," +cel_tower_name+ "," +latitude+ "," +longitude);
+				CompositeKey stockKey = new  CompositeKey(imei_ , unix_time);
+				Text stockValue = new Text(","+imsi_ + "," + s_timestamp + "," + e_timestamp+ "," +lac+ "," +cel_id+ "," +cel_tower_name+ "," +latitude+ "," +longitude);
 				//System.out.println(stockKey +", "+stockValue);
 				context.write(stockKey, stockValue);
 				_log.debug(stockKey.toString() + " => " + stockValue.toString());

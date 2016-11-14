@@ -13,16 +13,16 @@ import org.apache.hadoop.io.WritableUtils;
  */
 @SuppressWarnings("rawtypes")
 public class CompositeKey implements WritableComparable {
-	private Integer timegroup;
+	//private Integer timegroup;
 	private String udid;
 	private Long datetime;
 
 	public CompositeKey() {
 	}
 
-	public CompositeKey(Integer timegroup, String udid, Long datetime) {
+	public CompositeKey(String udid, Long datetime) {
 
-		this.timegroup = timegroup;
+		//this.timegroup = timegroup;
 		this.udid = udid;
 		this.datetime = datetime;
 	}
@@ -30,13 +30,13 @@ public class CompositeKey implements WritableComparable {
 	@Override
 	public String toString() {
 
-		return (new StringBuilder()).append(timegroup).append(',').append(udid).append(',').append(datetime).toString();
+		return (new StringBuilder()).append(udid).append(',').append(datetime).toString();
 	}
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
 
-		timegroup = WritableUtils.readVInt(in);
+		//timegroup = WritableUtils.readVInt(in);
 		udid = WritableUtils.readString(in);
 		datetime = WritableUtils.readVLong(in);
 		// datetime = in.readLong();
@@ -46,7 +46,7 @@ public class CompositeKey implements WritableComparable {
 	@Override
 	public void write(DataOutput out) throws IOException {
 		
-		WritableUtils.writeVInt(out, timegroup);
+		//WritableUtils.writeVInt(out, timegroup);
 		WritableUtils.writeString(out, udid);
 		WritableUtils.writeVLong(out, datetime);
 		// out.writeLong(datetime);
@@ -54,8 +54,13 @@ public class CompositeKey implements WritableComparable {
 
 	// @Override
 	public int compareTo(CompositeKey o) {
-		
-		int result = timegroup.compareTo(o.timegroup);
+		int result = udid.compareTo(o.udid);
+		if (0 == result) {
+		result =datetime.compareTo(o.datetime);
+		}
+		return result;
+		}
+		/*//int result = timegroup.compareTo(o.timegroup);
 		if(result != 0)
 			return result;
 		//if(result == 0){
@@ -64,7 +69,7 @@ public class CompositeKey implements WritableComparable {
 		if(result != 0)
 			return result;
 		
-		return datetime.compareTo(o.datetime);
+		return datetime.compareTo(o.datetime);*/
 		
 		/*
 		if (0 == result) {
@@ -73,18 +78,18 @@ public class CompositeKey implements WritableComparable {
 		//}
 		return result;
 		*/
-	}
+	
 
 	
 	
 	
-	public Integer getTimegroup() {
+	/*public Integer getTimegroup() {
 		return timegroup;
 	}
 
 	public void setTimegroup(Integer timegroup) {
 		this.timegroup = timegroup;
-	}
+	}*/
 
 	/**
 	 * Gets the udid.

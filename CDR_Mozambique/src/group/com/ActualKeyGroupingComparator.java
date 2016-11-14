@@ -17,14 +17,14 @@ public class ActualKeyGroupingComparator extends WritableComparator {
 		CompositeKey key1 = (CompositeKey) w1;
 		CompositeKey key2 = (CompositeKey) w2;
 		
-		int group = key1.getTimegroup().compareTo(key2.getTimegroup());
+		int group = key1.getUDID().compareTo(key2.getUDID());
 		
 		
-		/*if(group == 0){
+		if(group == 0){
 		// (check on udid)
-			group = key1.getUDID().compareTo(key2.getUDID());
+			group = key1.getDatetime().compareTo(key2.getDatetime());
 		}
-			*/	
+				
 		return group;
 
 	}

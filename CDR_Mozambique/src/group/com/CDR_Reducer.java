@@ -49,16 +49,16 @@ public class CDR_Reducer extends Reducer< CompositeKey,Text, Text, Text> {
 			
 			String[] cdr_data_value = v.toString().split(",");
 			
-			System.out.println("Start");
-			System.out.println("ValueB" + cdr_data_value[0] + "," + cdr_data_value[1]);
+			//System.out.println("Start");
+			//System.out.println("ValueB" + cdr_data_value[0] + "," + cdr_data_value[1]);
 			
-			String _time = cdr_data_value[1];
+		//	String _time = cdr_data_value[1];
 
 			
 			
-			Integer time_in_minutes = DateParser.timeToMinutes(_time);
+		//	Integer time_in_minutes = DateParser.timeToMinutes(_time);
 			
-			Integer time_group = com.time_groups.Snippet.TimeMapInMinutesToHour(time_in_minutes);
+			//Integer time_group = com.time_groups.Snippet.TimeMapInMinutesToHour(time_in_minutes);
 		
 			//String id = cdr_data_value[0];
 			//System.out.println(id);

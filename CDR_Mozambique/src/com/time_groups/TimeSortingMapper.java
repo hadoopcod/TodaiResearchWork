@@ -59,7 +59,7 @@ public class TimeSortingMapper extends Mapper<LongWritable, Text, CompositeKey, 
 			
 			//imei.set(imei_);
 			//h.set(hour);
-			System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: "+h +";"+imei_);
+			//System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: "+h +";"+imei_);
 			 CompositeKey stockKey = new  CompositeKey(h, imei_);
 			Text stockValue = new Text("," +imsi_ + "," + s_timestamp + "," + e_timestamp+ "," +lac+ "," +cel_id+ "," +cel_tower_name+ "," +latitude+ "," +longitude);
 			//System.out.println(stockKey +", "+stockValue);

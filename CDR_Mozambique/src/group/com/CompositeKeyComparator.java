@@ -19,14 +19,11 @@ public class CompositeKeyComparator extends WritableComparator {
 		
 		int compare = key1.getUDID().compareTo(key2.getUDID());
 
-		if (compare == 0) {
+		if(compare == 0) {
 			// only if we are in the same input group should we try and sort by
 			// value (datetime)
 			compare = key1.getDatetime().compareTo(key2.getDatetime());
-
 		}
-
 		return compare;
-
-	}
+}
 }

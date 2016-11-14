@@ -14,7 +14,7 @@ public class ActualKeyPartitioner extends Partitioner<CompositeKey, Text> {
 
 		try {
 			// Execute the default partitioner over the first part of the key
-			newKey.set(key.getTimegroup().toString());
+			newKey.set(key.getUDID().toString());
 			return hashPartitioner.getPartition(newKey, value, numReduceTasks);
 		} catch (Exception e) {
 			e.printStackTrace();
