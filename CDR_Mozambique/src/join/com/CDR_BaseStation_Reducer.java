@@ -33,30 +33,28 @@ public class CDR_BaseStation_Reducer extends MapReduceBase implements Reducer<Te
 
 	public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter)
 			throws IOException {
-
+		
+		//System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK" + key.toString());
+		//System.out.println("VVVVVVVVVTTTTTTTVVVVVVVVTTTTTTVVVVVVTTTTTVVV" + values.toString());
 		/*String strRead;
 		BufferedReader reader = new BufferedReader(
 				new FileReader("/home/cumbane/InputFolder/InputBaseStation/base_station_data"));
 		while ((strRead = reader.readLine()) != null) {
 			String splitarray[] = strRead.split(",");
 			// parse record and load into HahMap
-			//System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" + strRead);
+			//System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL: " + splitarray[2].trim());
 			Base_station_Map = new HashMap<String, String>();
 			Base_station_Map.put(splitarray[2].trim(), strRead);
 		}
 		
-		reader.close();*/
-		// values.next();_
+		reader.close();
+		values.next();*/
 		//System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK" + key.toString());
 		//System.out.println("VVVVVVVVVTTTTTTTVVVVVVVVTTTTTTVVVVVVTTTTTVVV" + values.toString());
 
 		while (values.hasNext()) {
 			String currValue = values.next().toString();
 			String valueSplitted[] = currValue.split(",");
-			/*
-			 * identifying the record source that corresponds to a cell number
-			 * and parses the values accordingly
-			 */
 
 			//System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" + currValue);
 
@@ -64,14 +62,13 @@ public class CDR_BaseStation_Reducer extends MapReduceBase implements Reducer<Te
 				cel1 = valueSplitted[0].trim();
 				imei_ = valueSplitted[1].trim();
 				//System.out.println(imei_);
-				
 				//System.out.println(key.toString());
 				
 				if(Base_station_Map.containsKey(key.toString()))
 				{
-					System.out.println( cel1 + "," +  Base_station_Map.get(key.toString()) );
+					//System.out.println( cel1 + "," +  Base_station_Map.get(key.toString()) );
 					
-					output.collect( key , new Text( currValue + "," + Base_station_Map.get(key.toString()) ));
+					output.collect( key , new Text( "," + currValue + "," + Base_station_Map.get(key.toString()) ));
 				}
 				
 				//System.out.println("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII" + cel1);
@@ -110,11 +107,12 @@ public class CDR_BaseStation_Reducer extends MapReduceBase implements Reducer<Te
 			while ((strRead = reader.readLine()) != null) {
 				String splitarray[] = strRead.split(",");
 				// parse record and load into HahMap
-				System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" + strRead);
+				//System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" + splitarray[2].trim());
 
 				Base_station_Map.put(splitarray[2].trim(), strRead);
 
 			}
+			reader.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

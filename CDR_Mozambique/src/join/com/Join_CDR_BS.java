@@ -35,10 +35,10 @@ public class Join_CDR_BS extends Configured implements Tool
              //FileSystem fs = FileSystem.get(new Configuration());
        	  	 //int number_of_companies = fs.listStatus(new Path(args[0])).length;
              MultipleInputs.addInputPath(conf, new Path(args[0]), TextInputFormat.class, CDR_Data_Mapper.class);
-             MultipleInputs.addInputPath(conf, new Path(args[1]), TextInputFormat.class, Base_Station_Mapper.class);
+             //MultipleInputs.addInputPath(conf, new Path(args[1]), TextInputFormat.class, Base_Station_Mapper.class);
             
              //Specifying the output directory @ runtime
-             FileOutputFormat.setOutputPath(conf, new Path(args[2]));
+             FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
              JobClient.runJob(conf);
              return 0;

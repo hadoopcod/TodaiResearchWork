@@ -28,13 +28,16 @@ public class CDR_Data_Mapper extends MapReduceBase implements Mapper<LongWritabl
 			String CDR_data_[] = line.split(",");
 			imei_ = CDR_data_[0].trim();
 			String imsi_ = CDR_data_[2].trim();
-			String s_timestamp = CDR_data_[3].trim();
-			System.out.println(s_timestamp);
-			String e_timestamp = CDR_data_[4].trim();
+			String s_timestamp = CDR_data_[4].trim();
+			//System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS: "+s_timestamp);
+			//System.out.println(s_timestamp);
+			
+			String e_timestamp = CDR_data_[5].trim();
+			//System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE: "+e_timestamp);
 			//Long lac = Long.parseLong(CDR_data_[5].trim());
-			cel_id = CDR_data_[6].trim();
+			cel_id = CDR_data_[7].trim();
 			String activity_type = CDR_data_[7].trim();
-
+			//System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: "+cel_id);
 			// sending the key value pair out of mapper
 			// output.collect(new Text(cel_id), new
 			// Text(fileTag+imei_+imsi_+s_timestamp+e_timestamp+lac+activity_type));

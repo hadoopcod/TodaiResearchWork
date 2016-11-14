@@ -35,16 +35,31 @@ public class CDR_Reducer extends Reducer< CompositeKey,Text, Text, Text> {
 		Text k = new Text(key.toString());
 		int count = 0;
 		
-		
-		
 		Iterator<Text> it = values.iterator();
 		while(it.hasNext()) {
 			Text v = new Text(it.next().toString());
 			
 			System.out.println("Key" + k);
-			//System.out.println("Value" + v);
+			System.out.println("ValueA" + v);
 			
-			String[] cdr_data_value = values.toString().split(",");
+			//644f8a9596cb81bb948889a27464d22966d7996cbbdf64e8ce62710b03aaaea6,
+			//2016-03-02 06:41:50,,521,01-00521-15381,Nhabete,34.4933,-24.7021
+			
+			try{
+			
+			String[] cdr_data_value = v.toString().split(",");
+			
+			System.out.println("Start");
+			System.out.println("ValueB" + cdr_data_value[0] + "," + cdr_data_value[1]);
+			
+			String _time = cdr_data_value[1];
+
+			
+			
+			Integer time_in_minutes = DateParser.timeToMinutes(_time);
+			
+			Integer time_group = com.time_groups.Snippet.TimeMapInMinutesToHour(time_in_minutes);
+		
 			//String id = cdr_data_value[0];
 			//System.out.println(id);
 			
@@ -58,6 +73,10 @@ public class CDR_Reducer extends Reducer< CompositeKey,Text, Text, Text> {
 			context.write(k, v);
 			//_log.debug(k.toString() + " => " + values.toString());
    			count++;
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 		//_log.debug("count = " + count);

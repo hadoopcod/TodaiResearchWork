@@ -3,6 +3,7 @@ package group.com;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -59,6 +60,7 @@ public class DateParser {
 			return data_time;
 		}
 		
+		/*
 		public static Long timeToMinutes(String time)
 		{		
 			String[] hourMin = time.split(":");
@@ -68,6 +70,7 @@ public class DateParser {
 			
 			return hoursInMins + mins;		
 		}
+		*/
 		
 		public static String timeToHour(String _time)
 		{
@@ -89,6 +92,46 @@ public class DateParser {
 			return (hour + ":" + minute + ":" + second);
 				
 					
+		}
+		
+		public static Integer timeToMinutes(String time) throws ParseException
+		{	
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = null;
+			try {
+			    date = sdf.parse(time);
+			} catch (ParseException ex) {
+			    // ...
+			    System.exit(-1);
+			}
+			
+			Calendar cal = Calendar.getInstance();
+			sdf.setTimeZone(TimeZone.getTimeZone("CAT"));
+			cal.setTime(date);
+			//int hour = sdf.ge;
+			//int minute = sdf.MINUTE_FIELD;
+			int hour = cal.get(Calendar.HOUR_OF_DAY);
+			int hourInMinutes = 60*hour;
+			int minute = cal.get(Calendar.MINUTE);
+			return (hourInMinutes + minute);
+			
+			
+			
+			
+			
+			
+			/*//yyyy-MM-dd HH:mm:ss
+			SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+			//df.setTimeZone(TimeZone.getTimeZone("UTC"));
+			String t = df.format(time);
+			t = df.getTime(time);
+			String ti = t.toString();
+			String[] hourMin = ti.split(":");
+			Long hour = Long.parseLong(hourMin[0]);
+			Long mins = Long.parseLong(hourMin[1]);
+			Long hoursInMins = hour * 60;	
+			
+			return hoursInMins + mins;		*/
 		}
 		
 		public static Long timeToUnixTime(String _time) throws ParseException {
