@@ -1,4 +1,4 @@
-package com.time_groups;
+package com.base_stations_CDR_group;
 
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
@@ -15,16 +15,15 @@ CompositeKey key1 = (CompositeKey) w1;
 CompositeKey key2 = (CompositeKey) w2;
  
 // (first check on udid)
-int compare = key1.getHour().compareTo(key2.getHour());
+int compare = key1.getCELID().compareTo(key2.getCELID());
  
 if (compare==0) {
-// only if we are in the same input group should we try and sort by value (datetime)
 	compare = key1.getIMEI().compareTo(key2.getIMEI());
-	if (compare==0){
-		compare = key1.getTime().compareTo(key2.getTime());
+	if(compare ==0){
+// only if we are in the same input group should we try and sort by value (datetime)
+	compare = key1.getTime().compareTo(key2.getTime());
+	
 	}
-	
-	
 }
  
 return compare;

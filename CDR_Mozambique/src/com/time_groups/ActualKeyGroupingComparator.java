@@ -19,8 +19,15 @@ CompositeKey key1 = (CompositeKey) w1;
 CompositeKey key2 = (CompositeKey) w2;
  
 // (check on udid)
-return key1.getHour().compareTo(key2.getHour());
-
+ int group = key1.getHour().compareTo(key2.getHour());
+if(group == 0){
+	// (check on udid)
+		group = key1.getIMEI().compareTo(key2.getIMEI());
+		if (group ==0){
+			group = key1.getTime().compareTo(key2.getTime());
+		}
+	}
+return group;
 }
 
 }

@@ -15,20 +15,22 @@ import org.apache.hadoop.io.WritableUtils;
 public class CompositeKey implements WritableComparable{
 	private Integer hour;
 	private String imei;
+	private Long time;
  
 	public CompositeKey() {
 	}
  
-	public CompositeKey(Integer hour,String imei) {
+	public CompositeKey(Integer hour,String imei,Long time) {
  
 		this.hour = hour;
 		this.imei = imei;
+		this.time = time;
 }
  
 @Override
 public String toString() {
  
-return (new StringBuilder()).append(hour).append(',').append(imei).toString();
+return (new StringBuilder()).append(hour).append(',').append(imei).append(',').append(time).toString();
 }
  
 @Override
@@ -36,6 +38,7 @@ public void readFields(DataInput in) throws IOException {
  
 hour = WritableUtils.readVInt(in);
 imei = WritableUtils.readString(in);
+time = WritableUtils.readVLong(in);
 //datetime = in.readLong();
 
 }
@@ -45,6 +48,7 @@ public void write(DataOutput out) throws IOException {
  
 WritableUtils.writeVInt(out, hour);
 WritableUtils.writeString(out, imei);
+WritableUtils.writeVLong(out, time);
 //out.writeLong(datetime);
 }
  
@@ -53,7 +57,10 @@ public int compareTo(CompositeKey o) {
  
 int result = hour.compareTo(o.hour);
 if (0 == result) {
-result =imei.compareTo(o.imei);
+	result =imei.compareTo(o.imei);
+	if(0 ==result){
+		result =time.compareTo(o.time);
+	}
 }
 return result;
 }
@@ -83,9 +90,19 @@ public String getIMEI() {
 return imei;
 }
  
-public void setIMEI(String Imei) {
+public void setIMEI(String imei) {
  
 this.imei = imei;
+}
+
+
+
+public Long getTime() {
+	return time;
+}
+
+public void setTime(Long time) {
+	this.time = time;
 }
 
 @Override
