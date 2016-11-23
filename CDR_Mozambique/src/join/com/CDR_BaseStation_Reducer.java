@@ -103,7 +103,7 @@ public class CDR_BaseStation_Reducer extends MapReduceBase implements Reducer<Te
 		try {
 			// read file from Distributed Cache
 			BufferedReader reader = new BufferedReader(
-					new FileReader("/home/hadoop/Input_Output_Folder/InputBaseStation/base_station_data"));
+					new FileReader("/home/cumbane/InputFolder/BaseStation_Data/base_station_data_filter"));
 			while ((strRead = reader.readLine()) != null) {
 				String splitarray[] = strRead.split(",");
 				// parse record and load into HahMap

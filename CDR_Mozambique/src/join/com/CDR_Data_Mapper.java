@@ -36,6 +36,7 @@ public class CDR_Data_Mapper extends MapReduceBase implements Mapper<LongWritabl
 			//System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE: "+e_timestamp);
 			//Long lac = Long.parseLong(CDR_data_[5].trim());
 			cel_id = CDR_data_[7].trim();
+			//System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: "+cel_id);
 			String activity_type = CDR_data_[7].trim();
 			//System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: "+cel_id);
 			// sending the key value pair out of mapper

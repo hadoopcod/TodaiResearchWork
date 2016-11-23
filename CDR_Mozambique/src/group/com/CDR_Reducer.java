@@ -39,8 +39,8 @@ public class CDR_Reducer extends Reducer< CompositeKey,Text, Text, Text> {
 		while(it.hasNext()) {
 			Text v = new Text(it.next().toString());
 			
-			System.out.println("Key" + k);
-			System.out.println("ValueA" + v);
+			//System.out.println("Key" + k);
+			//System.out.println("ValueA" + v);
 			
 			//644f8a9596cb81bb948889a27464d22966d7996cbbdf64e8ce62710b03aaaea6,
 			//2016-03-02 06:41:50,,521,01-00521-15381,Nhabete,34.4933,-24.7021

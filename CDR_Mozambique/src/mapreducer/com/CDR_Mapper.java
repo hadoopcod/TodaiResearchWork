@@ -9,7 +9,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 
-public class CDR_Mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+public class CDR_Mapper extends Mapper<LongWritable, Text, Text, Text> {
 	private Text imei = new Text();
 	private final IntWritable count = new IntWritable();
 
@@ -19,14 +19,23 @@ public class CDR_Mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
 		try {
 
-			String imei_ = record.imei_caller;
-			String imsi_ = record.imsi_caller;
+			String imei_ 		= record.imei_caller;
+			String imsi_		= record.imsi_caller;
+			String s_timestamp 	= record.Start_timestamp;
+			String e_timestamp 	= record.end_timestamp;
+			Long lac 			= record.lac;
+			String cel_id 		= record.cell_id;
+			String cel_name		= record.cel_name;
+			Double latitude		= record.latitude;
+			Double longitude	= record.longitude; 
+			
 
 			//System.out.println(imei_);
 
 			imei.set(imei_);
 			count.set(1);
-			context.write(imei, count);
+			Text stock_value = new Text(","+count+","+imsi_+","+s_timestamp+","+e_timestamp+","+lac+","+cel_id+","+cel_name+","+latitude+","+longitude);
+			context.write(imei,stock_value);
 
 			// }
 		} catch (Exception e) {
