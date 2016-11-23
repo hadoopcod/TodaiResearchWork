@@ -3,9 +3,11 @@ package com.base_stations_CDR_group;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 
-public class ActualKeyGroupingComparator extends WritableComparator {
+import com.base_stations_CDR_group.CompositeKey;
 
-	protected ActualKeyGroupingComparator() {
+public class ActualKeyGroupingComparator1 extends WritableComparator {
+
+	protected ActualKeyGroupingComparator1() {
 
 		super(CompositeKey.class, true);
 	}

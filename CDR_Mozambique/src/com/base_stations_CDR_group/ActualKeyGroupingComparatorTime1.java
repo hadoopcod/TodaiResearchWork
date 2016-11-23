@@ -3,8 +3,8 @@ import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
  
 
-public class ActualKeyGroupingComparatorTime extends WritableComparator {
-	protected ActualKeyGroupingComparatorTime(){
+public class ActualKeyGroupingComparatorTime1 extends WritableComparator {
+	protected ActualKeyGroupingComparatorTime1(){
 		 super(CompositeKey.class, true);
 	}
 

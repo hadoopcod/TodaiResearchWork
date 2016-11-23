@@ -7,8 +7,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-import com.base_stations_CDR_group.ActualKeyGroupingComparator;
-import com.base_stations_CDR_group.ActualKeyPartitioner;
+import com.base_stations_CDR_group.ActualKeyGroupingComparator1;
+import com.base_stations_CDR_group.ActualKeyPartitioner1;
 import com.base_stations_CDR_group.CDR_Mapper;
 import com.base_stations_CDR_group.CDR_Reducer;
 import com.base_stations_CDR_group.CDR_Group_by_Base_Station;
@@ -23,8 +23,8 @@ public class CDR_Group_by_Base_Station {
 			Job job = Job.getInstance(conf, "CDR_Group_by_Base_Station");
 			
 			job.setMapOutputKeyClass(CompositeKey.class);
-			job.setPartitionerClass(ActualKeyPartitioner.class);
-			job.setGroupingComparatorClass(ActualKeyGroupingComparator.class);
+			job.setPartitionerClass(ActualKeyPartitioner1.class);
+			job.setGroupingComparatorClass(ActualKeyGroupingComparator1.class);
 			//job.setGroupingComparatorClass(ActualKeyGroupingComparatorTime.class);
 			job.setSortComparatorClass(CompositeKeyComparator.class);
 			

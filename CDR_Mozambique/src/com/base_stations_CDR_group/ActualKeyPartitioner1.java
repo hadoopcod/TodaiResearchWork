@@ -4,8 +4,10 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.lib.partition.HashPartitioner;
+
+import com.base_stations_CDR_group.CompositeKey;
  
-public class ActualKeyPartitioner extends Partitioner<CompositeKey, Text> {
+public class ActualKeyPartitioner1 extends Partitioner<CompositeKey, Text> {
  
 HashPartitioner<Text, Text> hashPartitioner = new HashPartitioner<Text, Text>();
 //Text newKey = new Text();
