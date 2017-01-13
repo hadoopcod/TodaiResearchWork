@@ -11,6 +11,7 @@ public class CDR_Data {
 	public String imsi_caller;
 	public String Start_timestamp;
 	public String end_timestamp;
+	public String activity_type;
 	public long lac;
 	public String cell_id;
 	public String cel_name;
@@ -28,6 +29,7 @@ public class CDR_Data {
 		this.imsi_caller = CDR_data[3];
 		this.Start_timestamp = CDR_data[4];
 		this.end_timestamp = CDR_data[5];
+		this.activity_type = CDR_data[7];
 		this.cell_id = CDR_data[6];
 		this.cel_name = CDR_data[8];
 		this.lac = Integer.parseInt(CDR_data[9]);

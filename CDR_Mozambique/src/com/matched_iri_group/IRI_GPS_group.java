@@ -1,4 +1,4 @@
-package group.com;
+package com.matched_iri_group;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -18,44 +18,28 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-public class CDR_group {
+public class IRI_GPS_group {
 
 	public static void main(String[] args) throws Exception {
 		try {
 			Configuration conf = new Configuration();
-			Job job = Job.getInstance(conf, "CDR_group");
+			Job job = Job.getInstance(conf, "GPS_group");
 			
-			job.setMapOutputKeyClass(CompositeKey.class);
-			job.setPartitionerClass(ActualKeyPartitioner.class);
-			job.setGroupingComparatorClass(ActualKeyGroupingComparator.class);
-			//job.setGroupingComparatorClass(ActualKeyGroupingComparatorTime.class);
-			job.setSortComparatorClass(CompositeKeyComparator.class);
-			
-			
-			/*job.setPartitionerClass(NaturalKeyPartitioner.class);
-			job.setGroupingComparatorClass(NaturalKeyGroupingComparator.class);
-			job.setSortComparatorClass(CompositeKeyComparator.class);*/
-			
-			/*job.setMapOutputKeyClass(StockKey.class);
-			job.setMapOutputValueClass(Text.class);*/
-			
-			
-			job.setJarByClass(CDR_group.class);
-			job.setMapperClass(CDR_Mapper.class);
+			job.setJarByClass(IRI_GPS_group.class);
+			job.setMapperClass(IRI_GPS_Mapper.class);
 			//job.setCombinerClass(CDR_Reducer.class);
-			job.setReducerClass(CDR_Reducer.class);
-			
-			job.setOutputKeyClass(Text.class);
+			job.setReducerClass(IRI_GPS_Reducer.class);
+			conf.set("mapreduce.textoutputformat.separatorText", ",");
+			job.setOutputKeyClass(LongWritable.class);
 			job.setOutputValueClass(Text.class);
 			
 			FileInputFormat.addInputPath(job, new Path(args[0]));
 			FileOutputFormat.setOutputPath(job, new Path(args[1]));
 			
 			FileSystem fs = FileSystem.newInstance(conf);
-
 			if (fs.exists(new Path(args[1]))) {
 				fs.delete(new Path(args[1]), true);
-				}
+			}
 			System.exit(job.waitForCompletion(true) ? 0 : 1);
 		} catch (Exception e) {
 			e.printStackTrace();

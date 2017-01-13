@@ -18,11 +18,13 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 public class CDR_Reducer extends Reducer< CompositeKey,Text, Text, Text> {
 	//private Text result = new Text();
+
 	private static final Log _log = LogFactory.getLog(CDR_Reducer.class);
-	
+
 	/*private static Map<String, String> Base_station_Map = new HashMap<String, String>();
 
 	public void configure(JobConf job) {
@@ -35,41 +37,15 @@ public class CDR_Reducer extends Reducer< CompositeKey,Text, Text, Text> {
 		Text k = new Text(key.toString());
 		int count = 0;
 		
+		
 		Iterator<Text> it = values.iterator();
 		while(it.hasNext()) {
 			Text v = new Text(it.next().toString());
-			
-			//System.out.println("Key" + k);
-			//System.out.println("ValueA" + v);
-			
-			//644f8a9596cb81bb948889a27464d22966d7996cbbdf64e8ce62710b03aaaea6,
-			//2016-03-02 06:41:50,,521,01-00521-15381,Nhabete,34.4933,-24.7021
-			
+						
 			try{
 			
 			String[] cdr_data_value = v.toString().split(",");
-			
-			//System.out.println("Start");
-			//System.out.println("ValueB" + cdr_data_value[0] + "," + cdr_data_value[1]);
-			
-		//	String _time = cdr_data_value[1];
-
-			
-			
-		//	Integer time_in_minutes = DateParser.timeToMinutes(_time);
-			
-			//Integer time_group = com.time_groups.Snippet.TimeMapInMinutesToHour(time_in_minutes);
-		
-			//String id = cdr_data_value[0];
-			//System.out.println(id);
-			
-			/*if(Base_station_Map.containsKey(id))
-			{
-				System.out.println( id + "," +  Base_station_Map.get(id) );
-				
-				context.write( k , new Text( v + "," + Base_station_Map.get(id) ));
-			}*/
-			
+	
 			context.write(k, v);
 			//_log.debug(k.toString() + " => " + values.toString());
    			count++;

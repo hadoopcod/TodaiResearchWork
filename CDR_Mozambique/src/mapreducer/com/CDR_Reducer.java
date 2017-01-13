@@ -11,17 +11,17 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
 
-public class CDR_Reducer extends Reducer<Text, Text, Text, Text> {
+public class CDR_Reducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 	private IntWritable result = new IntWritable();
 	
-	public void reduce(Text key, Iterable<Text> values, Context context)
+	public void reduce(Text key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
 		int sum = 0;
 
 		//System.out.println("Reducer : " + key);
-		List <String> cdr_content = new ArrayList<String>();
+		//List <String> cdr_content = new ArrayList<String>();
 		
-		Iterator<Text> it = values.iterator();
+		/*Iterator<IntWritable> it = values.iterator();
 		
 		while(it.hasNext()) {
 			Text v = new Text(it.next().toString());
@@ -34,20 +34,26 @@ public class CDR_Reducer extends Reducer<Text, Text, Text, Text> {
 			//System.out.println("ValueA" + v);
 			//Map_Results.put(key.toString(), v.toString());
 
-			cdr_content.add(v.toString());
+			//cdr_content.add(v.toString());
 		
-		/*for (IntWritable val : values) {
-			cdr_content.add(e)
-			sum += val.get();*/
 			
 		}
 		result.set(sum);
+		context.write(key, result);
+		//result.set(sum);
 			if ((sum >= 2) && (sum <=144)){
 			
 				for(String x: cdr_content){
 				context.write(key,new Text(x));
 				}
 		}
-		//context.write(key, result);
+		
+*/	
+		for (IntWritable val : values) {
+	        sum += val.get();
+		}
+		 result.set(sum);
+		 if ((sum>1) && (sum<30000))
+	      context.write(key,result);
 	}
 }

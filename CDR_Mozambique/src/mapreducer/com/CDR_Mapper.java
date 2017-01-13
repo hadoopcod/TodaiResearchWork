@@ -9,8 +9,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 
-public class CDR_Mapper extends Mapper<LongWritable, Text, Text, Text> {
-	private Text imei = new Text();
+public class CDR_Mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+	private Text imsi = new Text();
 	private final IntWritable count = new IntWritable();
 
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
@@ -32,10 +32,11 @@ public class CDR_Mapper extends Mapper<LongWritable, Text, Text, Text> {
 
 			//System.out.println(imei_);
 
-			imei.set(imei_);
+			imsi.set(imsi_);
 			count.set(1);
-			Text stock_value = new Text(","+count+","+imsi_+","+s_timestamp+","+e_timestamp+","+lac+","+cel_id+","+cel_name+","+latitude+","+longitude);
-			context.write(imei,stock_value);
+			//Text stock_value = new Text(","+count+","+imsi_+","+s_timestamp+","+e_timestamp+","+lac+","+cel_id+","+cel_name+","+latitude+","+longitude);
+			//context.write(imsi,stock_value);
+			context.write(imsi,count);
 
 			// }
 		} catch (Exception e) {

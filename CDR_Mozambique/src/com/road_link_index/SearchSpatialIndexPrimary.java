@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -22,17 +23,19 @@ import com.vividsolutions.jts.operation.buffer.BufferOp;
 public class SearchSpatialIndexPrimary {
 
 	final double PRIMARY_DISTANCE_BUFFER_ROAD = 0.0044915; //Appx 500 meter buffer distance
+	final double SECONDARY_DISTANCE_BUFFER_ROAD = 0.0017966; //Appx 200 meter buffer distance
+	final double THIRD_DISTANCE_BUFFER_ROAD = 0.00044915; //Appx 100 meter buffer distance
 	//final double SECONDARY_DISTANCE_BUFFER_ROAD = 0.000008983;   //Appx 1 meter buffer distance
 
 	public SearchSpatialIndexPrimary(){
 		super();	
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "null" })
 	public void SearchIndexOfPointDataPrimary()
 			throws UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
 		CSVReader reader_cdr_info = new CSVReader(new InputStreamReader(
-				new FileInputStream("/home/cumbane/InputFolder/Output2/part-r-00000"), "UTF-8"),
+				new FileInputStream("/home/cumbane/InputFolder/Output_Groupped_Sorted/part-r-00000"), "UTF-8"),
 				',', '\"', '\'', 1);
 		/*CSVReader reader_taxi_info = new CSVReader(new InputStreamReader(
 				new FileInputStream("/media/sf_D_DRIVE/Todai Research/workspace_process_data/InputGpsData/part-00000-15-in-clip-test.csv"), "UTF-8"),
@@ -53,6 +56,11 @@ public class SearchSpatialIndexPrimary {
 		Geometry primary_point_geometry_buffer;
 		Envelope primary_point_buffer_bounds;
 		String point;
+		Geometry secondary_point_geometry_buffer;
+		Envelope secondary_point_buffer_bounds;
+		Geometry third_point_geometry_buffer;
+		Envelope third_point_buffer_bounds;
+		String point1;
 	
 		while ((values_cdr_data = reader_cdr_info.readNext()) != null) {
 
@@ -61,31 +69,45 @@ public class SearchSpatialIndexPrimary {
 			point_geometry = wkt_point_reader.read(point);
 			
 			//RticLinkInfoCollection Details For Easy
-			//String rticlink_data_value[];
+			/*String mozq_link_data_value[];
 			//Geometry rticlink_geometry;
-			//String WKT;     rticlink_data_value[0]
-			//String mapid;   rticlink_data_value[1]
-			//String linkid;  rticlink_data_value[2]
-			//String nwid;    rticlink_data_value[3]
-			//String gid;     rticlink_data_value[4]
+			String WKT   =     mozq_link_data_value[0];
+			String mapid =   mozq_link_data_value[1];
+			String linkid;  rticlink_data_value[2]
+			String nwid;    rticlink_data_value[3]
+			String gid;     rticlink_data_value[4]*/
 			//String geom;    rticlink_data_value[5]
 
 			primary_point_geometry_buffer = BufferOp.bufferOp(point_geometry, PRIMARY_DISTANCE_BUFFER_ROAD);
 			primary_point_buffer_bounds = primary_point_geometry_buffer.getEnvelopeInternal();
 
 			List<MozambiqueLinkInfoCollection> primary_indexed_search_result = CreateSpatialIndex.primary_index_mozq.query(primary_point_buffer_bounds);
+			
+			secondary_point_geometry_buffer = BufferOp.bufferOp(point_geometry, SECONDARY_DISTANCE_BUFFER_ROAD);
+			secondary_point_buffer_bounds = secondary_point_geometry_buffer.getEnvelopeInternal();
 
-			MozambiqueLinkInfoCollection primary_mozqlink_parameter;
-			String[] primary_rticlink_data_value;
+			List<MozambiqueLinkInfoCollection> secondary_indexed_search_result = CreateSpatialIndex.secondary_index_mozq.query(secondary_point_buffer_bounds);
+
+			third_point_geometry_buffer = BufferOp.bufferOp(point_geometry, THIRD_DISTANCE_BUFFER_ROAD);
+			third_point_buffer_bounds = third_point_geometry_buffer.getEnvelopeInternal();
+
+			List<MozambiqueLinkInfoCollection> third_indexed_search_result = CreateSpatialIndex.third_index_mozq.query(third_point_buffer_bounds);
+
+			
+			@SuppressWarnings("unused")
+			MozambiqueLinkInfoCollection primary_mozqlink_parameter = null;
+			MozambiqueLinkInfoCollection secondary_mozqlink_parameter = null;
+			MozambiqueLinkInfoCollection third_mozqlink_parameter = null;
+			String[] road_value;
 			Geometry primary_rticlink_geometry;
 			String searched_rticlink_id;
 			Boolean isOnBuffer;
 			int indexed_count = 0;
 			
-			String name;
-			String larger;
-			String link_id;
-			String road_id;
+			Long edge_id ;
+			Long start_node;
+			//Long end_node;
+			
 			
 			/*
 			 * For Primary Index
@@ -93,41 +115,67 @@ public class SearchSpatialIndexPrimary {
 			
 			System.out.println(primary_indexed_search_result.size());
 			
-			if (primary_indexed_search_result.size() > 0)
+			
+			if (primary_indexed_search_result.size() == 1)
 			{
 				for (int i = 0; i < primary_indexed_search_result.size(); i++) {
 					
 					primary_mozqlink_parameter = primary_indexed_search_result.get(i);
+					edge_id = primary_mozqlink_parameter.edge_id;
+					start_node = primary_mozqlink_parameter.start_node;
+					//end_node = primary_mozqlink_parameter.end_node;
 					
-					
-					name = primary_mozqlink_parameter.name;
-					larger = primary_mozqlink_parameter.larger;
-					link_id = primary_mozqlink_parameter.link_id;
-					road_id = primary_mozqlink_parameter.road_name;
-
 					indexed_count++;
 					
-					
-					
-					System.out.println(name  + ";" + larger  + ";" + link_id + ";" + road_id );
+					System.out.println(edge_id  + ";" + start_node );
 				
-
-					/*
-					writer_indexed.write(values_cdr_data[0] + ";" + values_cdr_data[1] + ";" + values_cdr_data[2] + ";"
-							+ values_cdr_data[3] + ";" + searched_rticlink_id + ";" + isOnBuffer + ";" + indexed_count
+					writer_indexed.write(values_cdr_data[0] + "," + values_cdr_data[1] + "," + values_cdr_data[2] + ","
+							+ values_cdr_data[3] + "," + edge_id  + "," + start_node  
 							+ "\n");
-							*/
-					
 				}
-			}
-			else if(primary_indexed_search_result.size()==0) { 
 				
-				System.out.println(values_cdr_data[0]  + ";" + values_cdr_data[1]  + ";" + values_cdr_data[2] + ";" + values_cdr_data[3] + ";" + values_cdr_data[4]+ ";" + values_cdr_data[5]+ ";" + values_cdr_data[6]+";" + values_cdr_data[7]+";" + values_cdr_data[8]+";" + values_cdr_data[9]);
-				/*writer_indexed.write(values_cdr_data[0] + ";" + values_cdr_data[1] + ";" + values_cdr_data[2] + ";"
-						+ values_cdr_data[3] + ";NONE;NONE;NONE" + "\n");*/
 			}
+			
+			else if(secondary_indexed_search_result.size() == 1)
+				{ System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"+secondary_indexed_search_result.size());
+					for (int i = 0; i < secondary_indexed_search_result.size(); i++) {
+					
+					secondary_mozqlink_parameter = secondary_indexed_search_result.get(i);
+					edge_id = secondary_mozqlink_parameter.edge_id;
+					start_node = secondary_mozqlink_parameter.start_node;
+					//end_node = primary_mozqlink_parameter.end_node;
+					
+					indexed_count++;
+					
+					System.out.println(edge_id  + ";" + start_node );
+				
+				//System.out.println(values_cdr_data[0]  + "," + values_cdr_data[1]  + "," + values_cdr_data[2] + "," + values_cdr_data[3] + "," + values_cdr_data[4]+ "," + values_cdr_data[5]+ ";" + values_cdr_data[6]+"," + values_cdr_data[7]+"," + values_cdr_data[8]+"," + values_cdr_data[9]);
+					writer_indexed.write(values_cdr_data[0] + "," + values_cdr_data[1] + "," + values_cdr_data[2] + ","
+							+ values_cdr_data[3] + "," + edge_id  + "," + start_node  
+							+ "\n");
+					}
+					
+			}
+			else if(third_indexed_search_result.size() == 1)
+			{ System.out.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"+third_indexed_search_result.size());
+				for (int i = 0; i < third_indexed_search_result.size(); i++) {
+				
+				third_mozqlink_parameter = third_indexed_search_result.get(i);
+				edge_id = third_mozqlink_parameter.edge_id;
+				start_node = third_mozqlink_parameter.start_node;
+				//end_node = primary_mozqlink_parameter.end_node;
+				
+				indexed_count++;
+				
+				System.out.println(edge_id  + ";" + start_node );
+			
+			//System.out.println(values_cdr_data[0]  + "," + values_cdr_data[1]  + "," + values_cdr_data[2] + "," + values_cdr_data[3] + "," + values_cdr_data[4]+ "," + values_cdr_data[5]+ ";" + values_cdr_data[6]+"," + values_cdr_data[7]+"," + values_cdr_data[8]+"," + values_cdr_data[9]);
+				writer_indexed.write(values_cdr_data[0] + "," + values_cdr_data[1] + "," + values_cdr_data[2] + ","
+						+ values_cdr_data[3] + "," + edge_id  + "," + start_node  
+						+ "\n");
+				}
 		}
-
+		}
 		reader_cdr_info.close();
 		writer_indexed.close();
 	}

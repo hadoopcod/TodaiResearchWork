@@ -34,13 +34,15 @@ public class CreateSpatialIndex {
 	public static String roadlink_datasource_location;
 	public static String primary_indexed_data_location;
 	public static String secondary_indexed_data_location;
+	public static String third_indexed_data_location;
 
 	public static Envelope minimum_bounding_roadlink_envelope;
 	public static STRtree primary_index_mozq;
-	public static STRtree secondary_index_rtic;
+	public static STRtree secondary_index_mozq;
+	public static STRtree third_index_mozq;
 	
-	public static STRtree primary_index_osm;
-	public static STRtree secondary_index_osm;
+	//public static STRtree primary_index_osm;
+	//public static STRtree secondary_index_osm;
 	
 	public CreateSpatialIndex() {
 		//super();
@@ -55,7 +57,7 @@ public class CreateSpatialIndex {
 		
 		Path pt=new Path(roadlink_datasource_location);
         FileSystem fs = FileSystem.get(new Configuration());
-        BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(pt)));
+        //BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(pt)));
         CSVReader reader_geometry = new CSVReader(new InputStreamReader((fs.open(pt)), "UTF-8"), ',', '\"', '\'', 1);
 		
 		//CSVReader reader_geometry = new CSVReader(new InputStreamReader(new FileInputStream(roadlink_datasource_location), "UTF-8"), ',', '\"', '\'', 1);
@@ -81,21 +83,25 @@ public class CreateSpatialIndex {
 	}
 	
 	public static void buildRticSpatialIndex(String roadlink_datasource_location_, String primary_indexed_data_location_,
-			String secondary_indexed_data_location_) throws IOException, ParseException{
+			String secondary_indexed_data_location_, String third_indexed_data_location_) throws IOException, ParseException{
 
 
 		roadlink_datasource_location = roadlink_datasource_location_;
 		primary_indexed_data_location = primary_indexed_data_location_;
-		//secondary_indexed_data_location = secondary_indexed_data_location_;
+		secondary_indexed_data_location = secondary_indexed_data_location_;
+		third_indexed_data_location = third_indexed_data_location_;
 
 		//final double DISTANCE_BUFFER_ROAD = 0.000269490; //Appx 30 meter buffer distance 0.000269490
 		//final double DISTANCE_BUFFER_ROAD = 0.000089830; //Appx 10 meter buffer distance 0.000089830
-		final double PRIMARY_DISTANCE_BUFFER_ROAD = 0.000044915; // Appx 5 meter buffer distance 000044915 10 meter on both side
+		final double THIRD_DISTANCE_BUFFER_ROAD = 0.00044915; //Appx 100 meter buffer distance
+		final double SECONDARY_DISTANCE_BUFFER_ROAD = 0.0017966; //Appx 200 meter buffer distance
+		final double PRIMARY_DISTANCE_BUFFER_ROAD = 0.0044915; //Appx 500 meter buffer distance
+		//final double PRIMARY_DISTANCE_BUFFER_ROAD = 0.000008983; // Appx 1 meter buffer distance 000044915 10 meter on both side
 									
 
 		Path pt=new Path(roadlink_datasource_location);
         FileSystem fs = FileSystem.get(new Configuration());
-        BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(pt)));
+        //BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(pt)));
         CSVReader reader_geometry = new CSVReader(new InputStreamReader((fs.open(pt)), "UTF-8"), ',', '\"', '\'', 1);
 		//CSVReader reader_geometry = new CSVReader(new InputStreamReader(new FileInputStream(roadlink_datasource_location), "UTF-8"), ',', '\"', '\'', 1);
 
@@ -111,9 +117,13 @@ public class CreateSpatialIndex {
 
 		Geometry secondary_roadlink_geometry_buffer;
 		Envelope secondary_roadlink_buffer_bounds;
+		
+		Geometry third_roadlink_geometry_buffer;
+		Envelope third_roadlink_buffer_bounds;
 
 		primary_index_mozq = new STRtree();
-		//secondary_index_rtic = new STRtree();
+		secondary_index_mozq = new STRtree();
+		third_index_mozq = new STRtree();
 		while ((values_roadlink_data = reader_geometry.readNext()) != null) {
 			{
 				roadlink_geometry = wkt_reader.read(values_roadlink_data[0]);
@@ -121,52 +131,53 @@ public class CreateSpatialIndex {
 				roadlink_bound = roadlink_prepared_geometry.getGeometry().getEnvelopeInternal();
 
 				primary_roadlink_geometry_buffer = BufferOp.bufferOp(roadlink_geometry, PRIMARY_DISTANCE_BUFFER_ROAD);
-				//primary_roadlink_buffer_bounds = primary_roadlink_geometry_buffer.getEnvelopeInternal();
-	
+				primary_roadlink_buffer_bounds = primary_roadlink_geometry_buffer.getEnvelopeInternal();
+					
 				//RticLinkInfoCollection primary_rtic_link_info = new RticLinkInfoCollection(values_roadlink_data,primary_roadlink_geometry_buffer);
 				//primary_index.insert(primary_roadlink_buffer_bounds, primary_rtic_link_info);
 				
-				//String name;
-				//String larger;
-				//String link_id;
-				//String road_id;
-				//String road_name;
-				//String start_X;
-				//String start_Y;
-				//String end_X;
-				//String end_Y;
-				//String start_loc;
-				//String end_loc;
-				//String district_name;
-				//String province_name;
-				
 				MozambiqueLinkInfoCollection road_info = new MozambiqueLinkInfoCollection();
-				road_info.setName(values_roadlink_data[1]);
-				road_info.setLarger(values_roadlink_data[2]);
-				road_info.setLink_id(values_roadlink_data[3]);
-				road_info.setRoad_name(values_roadlink_data[4]);
+				road_info.setEdge_id(Long.parseLong(values_roadlink_data[1]));
+				road_info.setStart_node(Long.parseLong(values_roadlink_data[2]));
+				//road_info.setEnd_node(Long.parseLong(values_roadlink_data[3]));
 				
 				//MozambiqueLinkInfoCollection primary_rtic_link_info = new MozambiqueLinkInfoCollection(values_roadlink_data,roadlink_geometry);
 				primary_index_mozq.insert(primary_roadlink_geometry_buffer.getEnvelopeInternal(), road_info);
+				//System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"+road_info.getEdge_id());
 				
-				/*
-				secondary_roadlink_geometry_buffer = BufferOp.bufferOp(roadlink_geometry,
-						SECONDARY_DISTANCE_BUFFER_ROAD);
+				
+				secondary_roadlink_geometry_buffer = BufferOp.bufferOp(roadlink_geometry,SECONDARY_DISTANCE_BUFFER_ROAD);
 				secondary_roadlink_buffer_bounds = secondary_roadlink_geometry_buffer.getEnvelopeInternal();
-				RticLinkInfoCollection secondary_rtic_link_info = new RticLinkInfoCollection(values_roadlink_data,
-						secondary_roadlink_geometry_buffer);
+				MozambiqueLinkInfoCollection secondary_road_info = new MozambiqueLinkInfoCollection();
+				secondary_road_info.setEdge_id(Long.parseLong(values_roadlink_data[1]));
+				secondary_road_info.setStart_node(Long.parseLong(values_roadlink_data[2]));
+				//road_info.setEnd_node(Long.parseLong(values_roadlink_data[3]));
+								
+				secondary_index_mozq.insert(secondary_roadlink_buffer_bounds, secondary_road_info);
+				//System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"+secondary_road_info.getEdge_id());
+			
 				
-				secondary_index.insert(secondary_roadlink_buffer_bounds, secondary_rtic_link_info);
-				*/
+				third_roadlink_geometry_buffer = BufferOp.bufferOp(roadlink_geometry,THIRD_DISTANCE_BUFFER_ROAD);
+				third_roadlink_buffer_bounds = third_roadlink_geometry_buffer.getEnvelopeInternal();
+				MozambiqueLinkInfoCollection third_road_info = new MozambiqueLinkInfoCollection();
+				third_road_info.setEdge_id(Long.parseLong(values_roadlink_data[1]));
+				third_road_info.setStart_node(Long.parseLong(values_roadlink_data[2]));
+				//road_info.setEnd_node(Long.parseLong(values_roadlink_data[3]));
+								
+				third_index_mozq.insert(third_roadlink_buffer_bounds, third_road_info);
+				//System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"+secondary_road_info.getEdge_id());
+			
 			}
 
 		}
 
 		primary_index_mozq.build();
+		
 		System.out.println("Primary Index Created");
-		//secondary_index.build();
-		//System.out.println("Secondary Index Created");
-
+		secondary_index_mozq.build();
+		System.out.println("Secondary Index Created");
+		third_index_mozq.build();
+		System.out.println("Third Index Created");
 		reader_geometry.close();
 
 		//FileWriterUtility.WriteToFile("primary", primary_indexed_data_location_, primary_index);
